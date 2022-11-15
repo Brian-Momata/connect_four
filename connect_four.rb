@@ -15,3 +15,31 @@ class GameBoard
     puts "#{board[5][0]}#{board[5][1]}#{board[5][2]}#{board[5][3]}#{board[5][4]}#{board[5][5]}#{board[5][6]}"
   end
 end
+
+#class for the players
+class Player
+  attr_reader :name, :token
+  
+  @@players = []
+
+  def initialize
+    @name = get_name
+    @token = get_token
+  end
+
+  def get_name
+    if @@players.empty?
+      puts "Player 1: What is your name?"
+    else
+      puts "Player 2: What is your name?"
+    end
+    player_name = gets.chomp
+    @@players << player_name
+    player_name
+  end
+
+  def get_token
+    return "\e[33m \u26AB" if @@players.size == 1
+    "\e[31m \u26AB"
+  end
+end
