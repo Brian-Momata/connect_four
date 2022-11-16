@@ -28,7 +28,7 @@ class Player
   end
 
   def get_name
-    if @@players.empty?
+    if empty?
       puts "Player 1: What is your name?"
     else
       puts "Player 2: What is your name?"
@@ -39,7 +39,16 @@ class Player
   end
 
   def get_token
-    return "\e[33m \u26AB" if @@players.size == 1
+    return "\e[33m \u26AB" if size == 1
     "\e[31m \u26AB"
+  end
+
+  private
+  def empty?
+    @@players.empty?
+  end
+
+  def size
+    @@players.size
   end
 end
