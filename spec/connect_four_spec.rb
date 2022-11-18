@@ -41,3 +41,22 @@ describe Player do
     end 
   end
 end
+
+describe GameBoard do
+  subject(:game) { GameBoard.new }
+  describe "#place_token" do
+    let(:brian) { Player.new }
+    it 'places token one the last line' do
+      board = game.instance_variable_get(:@board)
+      expect{ game.place_token(brian, 0) }.to change { board[5][0] }.from("\e[37m \u26AA").to("\e[31m \u26AB")
+    end
+    
+    context "when there's a token on the column" do
+      it 'paces a token on top of another' do
+        board = game.instance_variable_get(:@board)
+        board[5][0] = "\e[31m \u26AB"
+        expect{ game.place_token(brian, 0)}.to change{ board[4][0] }.from("\e[37m \u26AA").to("\e[31m \u26AB")
+      end
+    end
+  end
+end
