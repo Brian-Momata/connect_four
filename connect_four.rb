@@ -3,7 +3,7 @@ class GameBoard
   attr_accessor :board
 
   def initialize
-    @board = Array.new(6) { Array.new(7) { "\u26AA"} }
+    @board = Array.new(6) { Array.new(7) { "\e[37m \u26AA"} }
   end
   
   def display_board
@@ -14,11 +14,23 @@ class GameBoard
     puts "#{board[4][0]}#{board[4][1]}#{board[4][2]}#{board[4][3]}#{board[4][4]}#{board[4][5]}#{board[4][6]}"
     puts "#{board[5][0]}#{board[5][1]}#{board[5][2]}#{board[5][3]}#{board[5][4]}#{board[5][5]}#{board[5][6]}"
   end
+
+  def place_token(player, column)
+    i = board.length - 1
+
+    while i >= 0
+      if board[i][column] == "\e[37m \u26AA"
+        @board[i][column] = player.token
+        break
+      end
+      i -= 1
+    end
+  end
 end
 
 #class for the players
-class Player
-  attr_reader :name, :token
+class Player 
+  attr_reader :name, :token, :turn
   
   @@players = []
 
