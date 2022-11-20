@@ -26,6 +26,28 @@ class GameBoard
       i -= 1
     end
   end
+
+  def take_input(player)
+    column = ''
+    loop do
+      column = verify_input(player_input(player))
+      break if column
+     
+      puts "input error"
+    end
+    column - 1
+  end
+
+  def verify_input(number)
+    return number if number.between?(1, 7)
+  end
+  end
+
+  private
+  def player_input(player)
+    puts "#{player.name} Choose a column to place token"
+    gets.chomp.to_i
+  end
 end
 
 #class for the players
