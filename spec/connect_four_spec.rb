@@ -62,11 +62,12 @@ describe GameBoard do
   end
 
   describe "#take_input" do
+    let(:player) { Player.new }
     before do
-      allow(game).to receive(:gets).and_return("5\n")
+      allow(game).to receive(:player_input).and_return(5)
     end
     it 'returns a number minus 1' do
-      expect(game.take_input).to eq(4)
+      expect(game.take_input(player)).to eq(4)
     end
 
     context 'when input is invalid' do
@@ -77,7 +78,7 @@ describe GameBoard do
         allow(game).to receive(:player_input).and_return(invalid, valid)
 
         expect(game).to receive(:puts).with("input error").once
-        game.take_input
+        game.take_input(player)
       end
 
       it 'throws an error twice' do
@@ -87,7 +88,7 @@ describe GameBoard do
         allow(game).to receive(:player_input).and_return(invalid, invalid2, valid)
 
         expect(game).to receive(:puts).with("input error").twice
-        game.take_input
+        game.take_input(player)
       end
     end
   end
