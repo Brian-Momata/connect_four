@@ -44,6 +44,7 @@ end
 
 describe GameBoard do
   subject(:game) { GameBoard.new }
+  
   describe "#place_token" do
     let(:brian) { Player.new }
     it 'places token one the last line' do
@@ -56,6 +57,37 @@ describe GameBoard do
         board = game.instance_variable_get(:@board)
         board[5][0] = "\e[31m \u26AB"
         expect{ game.place_token(brian, 0)}.to change{ board[4][0] }.from("\e[37m \u26AA").to("\e[31m \u26AB")
+      end
+    end
+  end
+
+  describe "#take_input" do
+    before do
+      allow(game).to receive(:gets).and_return("5\n")
+    end
+    it 'returns a number minus 1' do
+      expect(game.take_input).to eq(4)
+    end
+
+    context 'when input is invalid' do
+  
+      it 'it throws an error once' do
+        invalid = 0
+        valid = 2
+        allow(game).to receive(:player_input).and_return(invalid, valid)
+
+        expect(game).to receive(:puts).with("input error").once
+        game.take_input
+      end
+
+      it 'throws an error twice' do
+        invalid = 0
+        invalid2 = 8
+        valid = 2
+        allow(game).to receive(:player_input).and_return(invalid, invalid2, valid)
+
+        expect(game).to receive(:puts).with("input error").twice
+        game.take_input
       end
     end
   end
