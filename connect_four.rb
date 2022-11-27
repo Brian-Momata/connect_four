@@ -1,9 +1,30 @@
+#contains intro, game rules and the messages for if there's a winner
+module Game
+  def intro
+    puts "Connect Four is a 2-player board game, in which the players take turns
+dropping colored tokens into a seven-column, six-row grid. The pieces fall straight down,
+occupying the lowest available space within the column.\n\n"
+    puts "The objective of the game is to be the first to form a horizontal, vertical
+or diagonal line of four of one's own tokens.\n\n"
+  end
+
+  def winner_message(player)
+    puts "#{player.name.upcase} WINS!!"
+  end
+
+  def draw
+   puts 'Draw'
+  end
+end
+
 # class for the game board
 class GameBoard
+  include Game
   attr_accessor :board
 
   def initialize
     @board = Array.new(6) { Array.new(7) { "\e[37m \u26AA"} }
+    intro
   end
   
   def display_board
@@ -45,6 +66,7 @@ class GameBoard
   end
 
   def winner?(player)
+    #horiontal check
     board.each do |row|
       row.each_index do |j|
         if row[j] == player.token && row[j + 1] == player.token && row[j + 2] == player.token && row[j + 3] == player.token
@@ -52,7 +74,8 @@ class GameBoard
         end
       end
     end
-    
+
+    #vertical check
     board.each_with_index do |row, i|
       row.each_index do |j|
         break if i > 2
@@ -62,6 +85,7 @@ class GameBoard
       end
     end
 
+    #diagonal check
     board.each_with_index do |row, i|
       row.each_index do |j|
         break if i > 2
@@ -70,7 +94,7 @@ class GameBoard
             return true
           end
         elsif j > 2 #right to left diagonal
-          if board[i][j] == player.token && board[i + 1][j - 1] == player.token && board[i + 2][j - 2] == player.token && board[i  3][j - 3] == player.token
+          if board[i][j] == player.token && board[i + 1][j - 1] == player.token && board[i + 2][j - 2] == player.token && board[i + 3][j - 3] == player.token
             return true
           end
         end
@@ -94,7 +118,11 @@ class GameBoard
         display_board
         p1.turn = true
       end
+      break if board.all? { |row| row.none? { |token| token == "\e[37m \u26AA" } }
+      winner_message(p1) if winner?(p1)
+      winner_message(p2) if winner?(p2)
     end
+    draw if !winner?(p1) && !winner?(p2)
   end
 
   private
@@ -142,7 +170,7 @@ class Player
   end
 end
 
+game = GameBoard.new
 p1 = Player.new
 p2 = Player.new
-game = GameBoard.new
 game.play_game(p1, p2)
