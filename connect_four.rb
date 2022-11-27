@@ -41,18 +41,71 @@ class GameBoard
   def verify_input(number)
     return number if number.between?(1, 7)
   end
+
+  def winner?(player)
+    board.each do |row|
+      row.each_index do |j|
+        if row[j] == player.token && row[j + 1] == player.token && row[j + 2] == player.token && row[j + 3] == player.token
+          return true
+        end
+      end
+    end
+    
+    board.each_with_index do |row, i|
+      row.each_index do |j|
+        break if i > 2
+        if board[i][j] == player.token && board[i + 1][j] == player.token && board[i + 2][j] == player.token && board[i + 3][j] == player.token
+          return true
+        end
+      end
+    end
+
+    board.each_with_index do |row, i|
+      row.each_index do |j|
+        break if i > 2
+        if j < 4 #left to right diagonal
+          if board[i][j] == player.token && board[i + 1][j + 1] == player.token && board[i + 2][j + 2] == player.token && board[i + 3][j + 3] == player.token
+            return true
+          end
+        elsif j > 2 #right to left diagonal
+          if board[i][j] == player.token && board[i + 1][j - 1] == player.token && board[i + 2][j - 2] == player.token && board[i  3][j - 3] == player.token
+            return true
+          end
+        end
+      end
+    end
+    return false
+  end
+
+  def play_game(p1, p2)
+    p1.turn = true
+    display_board
+    until winner?(p1) || winner?(p2)
+      if p1.turn
+        column = take_input(p1)
+        place_token(p1, column)
+        display_board
+        p1.turn = false
+      else
+        column = take_input(p2)
+        place_token(p2, column)
+        display_board
+        p1.turn = true
+      end
+    end
   end
 
   private
   def player_input(player)
-    puts "#{player.name} Choose a column to place token"
+    puts "#{player.name}: Choose a column to place token"
     gets.chomp.to_i
   end
 end
 
 #class for the players
 class Player 
-  attr_reader :name, :token, :turn
+  attr_reader :name, :token
+  attr_accessor :turn
   
   @@players = []
 
@@ -86,3 +139,8 @@ class Player
     @@players.size
   end
 end
+
+p1 = Player.new
+p2 = Player.new
+game = GameBoard.new
+game.play_game(p1, p2)
