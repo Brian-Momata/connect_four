@@ -74,29 +74,25 @@ class GameBoard
       end
     end
 
-    # vertical check
     board.each_with_index do |row, i|
       row.each_index do |j|
         break if i > 2
+
+        # vertical check
         if board[i][j] == player.token && board[i + 1][j] == player.token && board[i + 2][j] == player.token && board[i + 3][j] == player.token
           return true
         end
-      end
-    end
 
-    # diagonal check
-    board.each_with_index do |row, i|
-      row.each_index do |j|
-        break if i > 2
-
+        # diagonal check
         if j < 4 # left to right diagonal
-          if board[i][j] == player.token && board[i + 1][j + 1] == player.token && board[i + 2][j + 2] == player.token && board[i + 3][j + 3] == player.token
-            return true
-          end
-        elsif j > 2 # right to left diagonal
-          if board[i][j] == player.token && board[i + 1][j - 1] == player.token && board[i + 2][j - 2] == player.token && board[i + 3][j - 3] == player.token
-            return true
-          end
+            if board[i][j] == player.token && board[i + 1][j + 1] == player.token && board[i + 2][j + 2] == player.token && board[i + 3][j + 3] == player.token
+              return true
+            end
+        end
+        if j > 2 # right to left diagonal
+            if board[i][j] == player.token && board[i + 1][j - 1] == player.token && board[i + 2][j - 2] == player.token && board[i + 3][j - 3] == player.token
+              return true
+            end
         end
       end
     end
